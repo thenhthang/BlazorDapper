@@ -1,0 +1,44 @@
+﻿@page "/videolist"
+@using BlazorDapperUI.Services
+@using BlazorDapperShared.Entities
+@inject IVideoService VideoService
+@inject NavigationManager NavigationManager
+<h3>Video List</h3>
+<p style="align-content:flex-start">
+    <a href="/videoadd" >Add a video</a>
+</p>
+@if(videos == null)
+{
+    <p style="align-content:center" >
+        <img src="../images/loading.png" />
+    </p>
+}
+else
+{
+<table>
+    <tr>
+        <th>Edit</th>
+        <th>Video Title</th>
+        <th>Date Published</th>
+        <th>Is Active</th>
+    </tr>
+    @foreach (var video in videos)
+    {
+        <tr>
+            <td><img src="../images/video-editing.png"/></td>
+            <td>@video.Title</td>
+            <td>@video.DatePublished.ToString("dd/MM/yyyy")</td>
+            
+            <td>@(video.IsActive == true?"Active":"Not Active")</td>
+        </tr>
+    }
+</table>
+}
+
+@code {
+    IEnumerable<Video> videos = null;
+    protected override async Task OnInitializedAsync()
+    {
+        videos = await VideoService.GetAll();
+    }
+}

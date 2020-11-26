@@ -1,0 +1,56 @@
+﻿@page "/videoadd"
+@using BlazorDapperShared.Entities
+@using BlazorDapperUI.Services
+
+@inject IVideoService VideoService
+@inject NavigationManager NavigationManager
+
+<h3>Add a video</h3>
+<EditForm Model="@video" OnSubmit="@VideoInsert" >
+    <table>
+        <tr>
+            <td>Video Title:</td>
+            <td>
+                <input type="text" @bind="@video.Title" required/>
+            </td>
+        </tr>
+        <tr>
+            <td>Date Published:</td>
+            <td>
+                <input type="date" @bind="@video.DatePublished" required/>
+            </td>
+        </tr>
+        <tr>
+            <td>Is Active:</td>
+            <td>
+                <input type="checkbox" @bind="@video.IsActive" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align:center">
+                <input type="submit" value="Add"/>
+                <input type="button" value="Cancel" onclick="Cancel"/>
+            </td>
+        </tr>
+    </table>
+</EditForm>
+
+@code {
+
+    Video video = new Video();
+    protected override void OnInitialized()
+    {
+        video.DatePublished = new DateTime(2020, 01, 01);
+        video.IsActive = true;
+    }
+
+    protected async Task VideoInsert()
+    {
+        await VideoService.InsertVideo(video);
+        NavigationManager.NavigateTo("/");
+    }
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
